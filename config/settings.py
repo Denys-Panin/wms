@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django_extensions",
     # Local apps
     "apps.products.apps.ProductsConfig",
+    "apps.users.apps.UsersConfig",
 ]
 
 MIDDLEWARE = [
@@ -144,3 +145,5 @@ MAILERS = {
         "BACKEND": "django.core.mail.backends.console.EmailBackend",
     },
 }
+
+AUTH_USER_MODEL = "users.User"
