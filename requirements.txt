@@ -6,3 +6,4 @@ django-extensions>=4.1,<5
 ipython>=9,<10
 pytest>=8,<10
 pytest-django>=4.9,<5
+ruff>=0.14,<1

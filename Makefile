@@ -7,8 +7,9 @@ MANAGE := $(COMPOSE) exec $(WEB) python manage.py
 PYTHON := $(COMPOSE) exec $(WEB) python
 
 .PHONY: help rb u d r lw ld sh \
-        m mm su t \
-    	ch
+        m mm su t ch\
+		lt ltf fc f
+    	
 
 help:
 	@echo "Available commands:"
@@ -27,6 +28,10 @@ help:
 	@echo "  make t                           Run all tests"
 	@echo "  make t TEST_PATH=path_to_file    Run specific tests"
 	@echo "  make ch                          Run Django system checks"
+	@echo "  make lt                          Detect code-quality problems"
+	@echo "  make ltf                         Automatically fix supported lint issues"
+	@echo "  make fc                          Check formatting without modifying files"
+	@echo "  make f                           Format Python code"
 
 rb:
 	$(COMPOSE) up -d --build
@@ -63,3 +68,18 @@ t:
 
 ch:
 	$(MANAGE) check
+
+# RUFF
+lt:
+	$(COMPOSE) exec $(WEB) ruff check .
+
+ltf:
+	$(COMPOSE) exec $(WEB) ruff check . --fix
+
+fc:
+	$(COMPOSE) exec $(WEB) ruff format --check .
+
+f:
+	$(COMPOSE) exec $(WEB) ruff format . 
+
+
