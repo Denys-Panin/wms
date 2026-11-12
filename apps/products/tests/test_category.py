@@ -31,27 +31,6 @@ def test_cannot_delete_parent_with_children():
         parent.delete()
 
 
-# @pytest.mark.django_db
-# def test_category_cannot_be_its_own_parent():
-#     category = Category.objects.create(name="Electronics", slug="electronics")
-#     category.parent = category
-#     with pytest.raises(ValidationError):
-#         category.full_clean()
-#
-#
-# @pytest.mark.django_db
-# def test_category_cannot_create_cycle():
-#     electronics = Category.objects.create(name="Electronics", slug="electronics")
-#     computers = Category.objects.create(
-#         name="Computers", slug="electronics", parent=electronics
-#     )
-#     laptops = Category.objects.create(name="Laptops", slug="laptops", parent=computers)
-#     electronics.parent = laptos
-#
-#     with pytest.raises(ValidationError):
-#         electronics.full_clean()
-
-
 @pytest.mark.django_db
 def test_category_cannot_be_its_own_parent():
     category = Category.objects.create(
