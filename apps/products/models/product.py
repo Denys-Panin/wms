@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -24,8 +25,28 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def clean(self):
+        super().clean()
+
+        if (
+            self.tracking_type == self.TrackingType.SERIALIZED
+            and self.unit != self.Unit.PCS
+        ):
+            raise ValidationError(
+                {"unit": ("Serialized products must use pieces (PCS) as their unit.")}
+            )
+
     class Meta:
         ordering = ["name"]
+
+        constraints = [
+            models.CheckConstraint(
+                condition=(
+                    ~models.Q(tracking_type="SERIALIZED") | models.Q(unit="PCS")
+                ),
+                name="product_serialized_requires_pcs",
+            )
+        ]
 
     def __str__(self):
         return f"{self.sku} - {self.name}"

@@ -1,4 +1,5 @@
 import pytest
+from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 
 from apps.products.models import Category, Product
@@ -60,3 +61,30 @@ def test_create_serialized_product(category):
 
     assert product.tracking_type == Product.TrackingType.SERIALIZED
     assert product.unit == Product.Unit.PCS
+
+
+def test_serialized_product_requires_pcs(category):
+    product = Product(
+        sku="LEN-T14-003",
+        name="Lenovo ThinkPad T14",
+        category=category,
+        tracking_type=Product.TrackingType.SERIALIZED,
+        unit=Product.Unit.KG,
+    )
+
+    with pytest.raises(ValidationError) as exc_info:
+        product.full_clean()
+
+    assert "unit" in exc_info.value.message_dict
+
+
+def test_database_reject_serialized_kg(category):
+    with pytest.raises(IntegrityError):
+        with transaction.atomic():
+            Product.objects.create(
+                sku="LEN-T14-004",
+                name="Laptop ThinkPad T14",
+                category=category,
+                tracking_type=Product.TrackingType.SERIALIZED,
+                unit=Product.Unit.KG,
+            )
