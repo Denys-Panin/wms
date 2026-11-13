@@ -8,7 +8,7 @@ PYTHON := $(COMPOSE) exec $(WEB) python
 
 .PHONY: help rb u d r lw ld sh \
         m mm su t ch\
-		lt ltf fc f
+		lc lf fc f
     	
 
 help:
@@ -28,8 +28,8 @@ help:
 	@echo "  make t                           Run all tests"
 	@echo "  make t TEST_PATH=path_to_file    Run specific tests"
 	@echo "  make ch                          Run Django system checks"
-	@echo "  make lt                          Detect code-quality problems"
-	@echo "  make ltf                         Automatically fix supported lint issues"
+	@echo "  make lc                          Check code-quality problems"
+	@echo "  make lf                         Automatically fix supported lint issues"
 	@echo "  make fc                          Check formatting without modifying files"
 	@echo "  make f                           Format Python code"
 
@@ -70,10 +70,10 @@ ch:
 	$(MANAGE) check
 
 # RUFF
-lt:
+lc:
 	$(COMPOSE) exec $(WEB) ruff check .
 
-ltf:
+lf:
 	$(COMPOSE) exec $(WEB) ruff check . --fix
 
 fc:
