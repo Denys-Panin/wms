@@ -1,12 +1,14 @@
 from django.db import transaction
+
 from apps.products.models import Category
 
+
 @transaction.atomic
-def change_category_parent(*, category: Category, new_parent: Category | None) -> Category:
-    list(Category.objects
-         .order_by("pk")
-         .select_for_update()
-         .values_list("pk",flat=True)
+def change_category_parent(
+    *, category: Category, new_parent: Category | None
+) -> Category:
+    list(
+        Category.objects.order_by("pk").select_for_update().values_list("pk", flat=True)
     )
     category = Category.objects.get(pk=category.pk)
     parent = None

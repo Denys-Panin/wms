@@ -26,13 +26,12 @@ def test_create_product(category):
 def test_product_sku_must_be_unique(category):
     Product.objects.create(sku="LEN-T14-001", name="Another laptop", category=category)
 
-    with pytest.raises(IntegrityError):
-        with transaction.atomic():
-            Product.objects.create(
-                sku="LEN-T14-001",
-                name="Another laptop",
-                category=category,
-            )
+    with pytest.raises(IntegrityError), transaction.atomic():
+        Product.objects.create(
+            sku="LEN-T14-001",
+            name="Another laptop",
+            category=category,
+        )
 
 
 def test_category_reverse_relationship(category):
@@ -79,12 +78,11 @@ def test_serialized_product_requires_pcs(category):
 
 
 def test_database_reject_serialized_kg(category):
-    with pytest.raises(IntegrityError):
-        with transaction.atomic():
-            Product.objects.create(
-                sku="LEN-T14-004",
-                name="Laptop ThinkPad T14",
-                category=category,
-                tracking_type=Product.TrackingType.SERIALIZED,
-                unit=Product.Unit.KG,
-            )
+    with pytest.raises(IntegrityError), transaction.atomic():
+        Product.objects.create(
+            sku="LEN-T14-004",
+            name="Laptop ThinkPad T14",
+            category=category,
+            tracking_type=Product.TrackingType.SERIALIZED,
+            unit=Product.Unit.KG,
+        )
